@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Day Spinner</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle at top left,#7f5af0,#16161a 35%),
+    radial-gradient(circle at bottom right,#00c6ff,#16161a 40%);
+}
+
+.bg-glow{
+    position:absolute;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    filter:blur(160px);
+    opacity:.18;
+}
+
+.glow1{
+    background:#00f5ff;
+    top:-150px;
+    left:-150px;
+}
+
+.glow2{
+    background:#7f5af0;
+    bottom:-150px;
+    right:-150px;
+}
+
+.container{
+    width:min(950px,95%);
+    padding:40px;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.35);
+
+    text-align:center;
+}
+
+.title{
+    color:white;
+    font-size:2.6rem;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:rgba(255,255,255,.7);
+    margin-bottom:35px;
+}
+
+.days{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.day{
+    width:100px;
+    height:100px;
+
+    border-radius:22px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+    font-size:1rem;
+    font-weight:600;
+
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+
+    transition:.25s;
+}
+
+.active{
+    background:linear-gradient(135deg,#00f5ff,#6c63ff);
+
+    transform:translateY(-8px) scale(1.08);
+
+    box-shadow:
+    0 0 25px rgba(0,245,255,.8),
+    0 0 60px rgba(0,245,255,.4);
+}
+
+.winner{
+    background:linear-gradient(
+    135deg,
+    #FFD700,
+    #FF9800
+    ) !important;
+
+    color:#111;
+
+    transform:scale(1.1);
+
+    box-shadow:
+    0 0 30px #FFD700,
+    0 0 70px rgba(255,215,0,.7);
+}
+
+.spin-btn{
+    margin-top:35px;
+
+    border:none;
+
+    padding:16px 42px;
+
+    border-radius:999px;
+
+    color:white;
+    font-size:1.1rem;
+    font-weight:600;
+
+    cursor:pointer;
+
+    background:linear-gradient(
+    135deg,
+    #7f5af0,
+    #00c6ff
+    );
+
+    box-shadow:
+    0 12px 30px rgba(0,198,255,.3);
+
+    transition:.3s;
+}
+
+.spin-btn:hover{
+    transform:translateY(-3px);
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:.4s;
+}
+
+.overlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.popup{
+    width:450px;
+    max-width:90%;
+
+    padding:35px;
+
+    text-align:center;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    color:white;
+
+    transform:scale(.6);
+    transition:.4s;
+}
+
+.overlay.show .popup{
+    transform:scale(1);
+}
+
+.popup-emoji{
+    font-size:70px;
+    margin-bottom:10px;
+}
+
+.popup h2{
+    font-size:2rem;
+    margin-bottom:15px;
+}
+
+.popup p{
+    line-height:1.8;
+    color:rgba(255,255,255,.9);
+}
+
+.info-box{
+    margin-top:20px;
+    padding:18px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.08);
+}
+
+.info-box div{
+    margin:8px 0;
+}
+
+.close-btn{
+    margin-top:25px;
+
+    border:none;
+
+    padding:14px 35px;
+
+    border-radius:999px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    background:linear-gradient(
+    135deg,
+    #FFD700,
+    #FF9800
+    );
+}
+
+@media(max-width:700px){
+
+.day{
+    width:80px;
+    height:80px;
+}
+
+.title{
+    font-size:2rem;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-glow glow1"></div>
+<div class="bg-glow glow2"></div>
+
+<div class="container">
+
+    <div class="title">✨ Lucky Day Spinner ✨</div>
+
+    <div class="subtitle">
+        Click the button and let destiny choose your lucky day.
+    </div>
+
+    <div class="days">
+
+        <div class="day">SUN</div>
+        <div class="day">MON</div>
+        <div class="day">TUE</div>
+        <div class="day">WED</div>
+        <div class="day">THU</div>
+        <div class="day">FRI</div>
+        <div class="day">SAT</div>
+
+    </div>
+
+    <button class="spin-btn" id="spinBtn">
+        🎲 Spin Now
+    </button>
+
+</div>
+
+<!-- POPUP -->
+
+<div class="overlay" id="overlay">
+
+    <div class="popup">
+
+        <div class="popup-emoji">🎉</div>
+
+        <h2 id="popupDay">Monday</h2>
+
+        <p id="popupText"></p>
+
+        <div class="info-box">
+
+            <div id="popupColor"></div>
+
+            <div id="popupNumber"></div>
+
+        </div>
+
+        <button class="close-btn" onclick="closePopup()">
+            Awesome!
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const days=document.querySelectorAll(".day");
+const spinBtn=document.getElementById("spinBtn");
+
+const info={
+
+SUN:{
+msg:"Sunday is your day of positivity, happiness and peace. Relax and recharge because good energy surrounds you.",
+color:"Gold 💛",
+num:"1"
+},
+
+MON:{
+msg:"Monday symbolizes fresh beginnings. New opportunities and success are ready to enter your life.",
+color:"Blue 💙",
+num:"7"
+},
+
+TUE:{
+msg:"Tuesday gives you courage and determination. Today is perfect for taking action.",
+color:"Red ❤️",
+num:"3"
+},
+
+WED:{
+msg:"Wednesday represents wisdom, balance and smart decisions. Trust your instincts today.",
+color:"Green 💚",
+num:"5"
+},
+
+THU:{
+msg:"Thursday attracts abundance and growth. Great opportunities are closer than you think.",
+color:"Purple 💜",
+num:"8"
+},
+
+FRI:{
+msg:"Friday is filled with joy, celebration and lucky surprises. Expect something exciting.",
+color:"Pink 🩷",
+num:"9"
+},
+
+SAT:{
+msg:"Saturday rewards patience and consistency. Your efforts are creating something valuable.",
+color:"Black 🖤",
+num:"4"
+}
+
+};
+
+let spinning=false;
+
+spinBtn.addEventListener("click",spin);
+
+function spin(){
+
+if(spinning) return;
+
+spinning=true;
+spinBtn.disabled=true;
+
+days.forEach(day=>{
+day.classList.remove("winner");
+});
+
+let current=0;
+let steps=Math.floor(Math.random()*35)+45;
+
+const interval=setInterval(()=>{
+
+days.forEach(day=>{
+day.classList.remove("active");
+});
+
+days[current].classList.add("active");
+
+current=(current+1)%days.length;
+
+steps--;
+
+if(steps<=0){
+
+clearInterval(interval);
+
+const winner=
+(current-1+days.length)%days.length;
+
+days.forEach(day=>{
+day.classList.remove("active");
+});
+
+days[winner].classList.add("winner");
+
+const selected=
+days[winner].textContent;
+
+setTimeout(()=>{
+showPopup(selected);
+},600);
+
+spinning=false;
+spinBtn.disabled=false;
+
+}
+
+},100);
+
+}
+
+function showPopup(day){
+
+document.getElementById("popupDay").innerHTML=
+`🏆 Congratulations!<br>${day} is Your Lucky Day`;
+
+document.getElementById("popupText").innerText=
+info[day].msg;
+
+document.getElementById("popupColor").innerHTML=
+`🎨 Lucky Color: ${info[day].color}`;
+
+document.getElementById("popupNumber").innerHTML=
+`🍀 Lucky Number: ${info[day].num}`;
+
+document.getElementById("overlay")
+.classList.add("show");
+
+}
+
+function closePopup(){
+
+document.getElementById("overlay")
+.classList.remove("show");
+
+}
+
+</script>
+
+</body>
+</html>
